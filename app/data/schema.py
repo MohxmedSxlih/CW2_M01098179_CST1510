@@ -22,17 +22,20 @@ def create_users_table(conn):
 
 def create_cyber_incidents_table(conn):
     cursor = conn.cursor()
-    createScript = """
+    createScript =("""
         CREATE TABLE IF NOT EXISTS cyber_incidents (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
+            date TEXT NOT NULL,
+            incident_type TEXT NOT NULL,
             severity TEXT NOT NULL,
             status TEXT DEFAULT 'open',
-            date TEXT
+            description TEXT,
+            reported_by TEXT
         )
-    """
+    """)
     cursor.execute(createScript)
     conn.commit()
+
 
 def create_datasets_metadata_table(conn):
     cursor = conn.cursor()
