@@ -16,16 +16,14 @@ USER_DATA_FILE = "users.txt"
 
 def register_user(username, password):
     if user_exists(username):
-        print(f"Error: Username '{username}' already exists.")
-        return False
+        return False, f"Error: Username '{username}' already exists."
 
     hashed_password = hash_password(password)
 
     with open(USER_DATA_FILE, "a") as f:
         f.write(f"{username},{hashed_password}\n")
 
-    print(f"Success: User '{username}' registered successfully!")
-    return True
+    return True, f"Success: User '{username}' registered successfully!"
 
 
 def user_exists(username):
@@ -45,10 +43,13 @@ def login_user(username, password):
             for line in f.readlines():
                 user, hashed_password = line.strip().split(",", 1)
                 if user == username:
-                    return verify_password(password, hashed_password)
+                    if verify_password(password, hashed_password):
+                        return True, "Login successful"
+                    else:
+                        return False, "Incorrect password"
+        return False, "Username not found"
     except FileNotFoundError:
-        return False
-    return False
+        return False, "User data file not found"
 
 def validate_user(username, password=None):
     if not user_exists(username):
